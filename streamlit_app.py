@@ -24,13 +24,13 @@ data_load_state.text('La dernière date de mise à jour de la base est le '+last
 
 ## Importing
 uploaded_file = st.file_uploader("Choisis le fichier des assurés à vérifier",type={"csv"})
-st.divider()
 
 ## Analyse
 if uploaded_file is not None:
     
     portfolio = pd.read_csv(uploaded_file,sep=';')
     st.info('La base contient '+ str(len(portfolio))+ ' assurés à vérifier')
+    st.divider()
 
     data_process_state = st.text('Préparation des données...')
     
@@ -103,8 +103,14 @@ if uploaded_file is not None:
     if len(concern)==0:
         st.success('Aucun assuré ne semble être dans la liste des avoirs gelés')
         st.balloons()
-        st.download_button("Télécharger le fichier",similaritiesCSV,"concordanceScore.csv")
+        st.download_button("Télécharger le fichier des meilleurs concordances",
+                           similaritiesCSV,"concordanceScore.csv")
     else:
         st.error('Il y a ' + str(len(concern)) + ' assurés avec une potentielle concordance')
-        st.download_button("Télécharger le fichier",similaritiesCSV,"concordanceScore.csv")
+        st.download_button("Télécharger le fichier des meilleurs concordances",
+                           similaritiesCSV,"concordanceScore.csv")
         st.dataframe(concern)
+        st.write('Liens vers les fiches détaillés du Registre des gels des avoirs')
+        urlRegistre='https://gels-avoirs.dgtresor.gouv.fr/Gels/RegistreDetail?idRegistre='
+        for cc in range(len(concern)):
+            st.link_button(concern['assure'][cc], url+str(concern['idRegistre'][cc]))
