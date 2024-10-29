@@ -7,7 +7,7 @@ st.title('Application LCBFT')
 
 
 ## Loading data
-@st.cache_data
+@st.cache_data(ttl=24*60*60)
 def telechargement(url):
     res = pd.read_json(url)
     return res
