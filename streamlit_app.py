@@ -113,4 +113,4 @@ if uploaded_file is not None:
         st.write('Liens vers les fiches détaillés du Registre des gels des avoirs')
         urlRegistre='https://gels-avoirs.dgtresor.gouv.fr/Gels/RegistreDetail?idRegistre='
         for cc in range(len(concern)):
-            st.link_button(concern['assure'][cc], url+str(concern['idRegistre'][cc]))
+            st.link_button(concern['assure'][cc], urlRegistre+str(concern['idRegistre'][cc]))
