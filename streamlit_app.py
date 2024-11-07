@@ -3,12 +3,18 @@ import pandas as pd
 import numpy as np
 from rapidfuzz import fuzz
 
-st.title('Argos - Open Source')
+## Titre et logo
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.title('Argos - Open Source')
+with col2:
+    st.image('logoHestialytics.jpg')
+st.columns(1)
 
 st.header('Disclaimer')
 st.write('Argos permet de vérifier si un de vos assurés est dans la liste du Trésor des gels des avoirs. Cette vérification fait parti du dispositf réglementaire de la LCB-FT.')
-st.write('Argos est développé par Hestialytics et est mise en open-source. Des bugs peuvent subsister.')
-st.write('Si vous souhaitez avoir une version plus adaptez à vous besoins, contactez nous à contact@hestialytics.com')
+st.write('Argos est développé par Hestialytics et est mis à disposition en open-source. Des bugs peuvent subsister.')
+st.write('Si vous souhaitez avoir une version plus adaptée à vous besoins, contactez nous à contact@hestialytics.com')
 st.divider()
 
 st.header('Format des données')
