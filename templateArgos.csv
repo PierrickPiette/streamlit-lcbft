@@ -1,6 +1,6 @@
-contractId,nom,prenom
-1,Biden,Joe
-2,Macron,Emmanuel
-3,Poutine,Vladimir
-4,Tuche,Michel
-5,Duck,Donald
+﻿contractId;nom;prenom
+1;Macron;Emmanuel
+2;Biden;Joe
+3;Poutine;Vladimir
+4;Duck;Donald
+5;Tuche;Michel
