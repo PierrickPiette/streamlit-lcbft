@@ -3,8 +3,16 @@ import pandas as pd
 import numpy as np
 from rapidfuzz import fuzz
 
-st.title('Application LCBFT')
+st.title('Argos - Open Source')
 
+st.header('Disclaimer')
+st.write('Argos permet de vérifier si un de vos assurés est dans la liste du Trésor des gels des avoirs. Cette vérification fait parti du dispositf réglementaire de la LCB-FT.')
+st.write('Argos est développé par Hestialytics et est mise en open-source. Des bugs peuvent subsister.')
+st.write('Si vous souhaitez avoir une version plus adaptez à vous besoins, contactez nous à contact@hestialytics.com')
+st.divider()
+
+st.header('Format des données')
+st.write('Le fichier à uploader doit comporter au moins trois colonnes : *contractId*, *nom*, *prenom*')
 
 ## Loading data
 @st.cache_data(ttl=24*60*60)
@@ -20,10 +28,10 @@ data = data['Publications']['PublicationDetail']
 idsGel = []
 for ii in data:
     idsGel.append(ii['IdRegistre'])
-data_load_state.text('La dernière date de mise à jour de la base est le '+lastDateData)
+data_load_state.text('La dernière date de mise à jour de la base des gels des avoirs est le '+lastDateData)
 
 ## Importing
-uploaded_file = st.file_uploader("Choisis le fichier des assurés à vérifier",type={"csv"})
+uploaded_file = st.file_uploader("Uploader le fichier des assurés à vérifier",type={"csv"})
 
 ## Analyse
 if uploaded_file is not None:
@@ -66,9 +74,9 @@ if uploaded_file is not None:
     ## Similarities
     for aa in range(len(portfolio)):
         computing.progress(aa/len(portfolio))
-        prenomAssure = portfolio['Assure - Prenom'][aa]
+        prenomAssure = portfolio['prenom'][aa]
         prenomAssure = prenomAssure.strip()
-        assure = prenomAssure.lower() + ' ' + portfolio['Assure - Nom'][aa].lower()
+        assure = prenomAssure.lower() + ' ' + portfolio['nom'][aa].lower()
         assure= assure.strip()
         sims=[]
         for gg in range(len(gels)):
@@ -79,7 +87,7 @@ if uploaded_file is not None:
             ratio2 = (fuzz.ratio(assure,newGelName)+fuzz.token_ratio(assure,newGelName))/2
             sims.append(max(ratio1,ratio2))
         kept = np.argmax(sims)
-        new = pd.DataFrame({'assure':[prenomAssure + ' ' +portfolio['Assure - Nom'][aa]],
+        new = pd.DataFrame({'assure':[prenomAssure + ' ' +portfolio['nom'][aa]],
                             'contractId':[portfolio['contractId'][aa]],
                             'idRegistre':[gels['idRegistre'][kept]],
                             'nomGel':[gels['nom'][kept]],
