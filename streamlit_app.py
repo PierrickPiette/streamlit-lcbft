@@ -15,20 +15,29 @@ st.header('Disclaimer')
 st.write('Argos permet de vérifier si un de vos assurés est dans la liste du Trésor des gels des avoirs. Cette vérification fait parti du dispositf réglementaire de la LCB-FT.')
 st.write('Argos est développé par Hestialytics et est mis à disposition en open-source. Des bugs peuvent subsister.')
 st.write('Si vous souhaitez avoir une version plus adaptée à vous besoins, contactez nous à contact@hestialytics.com')
-st.divider()
 
-st.header('Format des données')
-st.write('Le fichier à uploader doit comporter au moins trois colonnes : *contractId*, *nom*, *prenom*')
-
-## Loading data
+## Loading data Json
 @st.cache_data(ttl=24*60*60)
-def telechargement(url):
+def telechargementJSON(url):
     res = pd.read_json(url)
     return res
 
+## Loading data csv
+@st.cache_data(ttl=24*60*60)
+def telechargementCSV(url):
+    res = pd.read_csv(url,sep=';')
+    return res
+
+## Convertion en csv
+@st.cache_data
+def convert_df(df):
+    return df.to_csv(index=False,sep=';').encode('utf-8')
+
+## Argos
+st.header('Argos')
 data_load_state = st.text('Téléchargement de la base des gels des avoirs ...')
 fileAPI = 'https://gels-avoirs.dgtresor.gouv.fr/ApiPublic/api/v1/publication/derniere-publication-fichier-json'
-data = telechargement(fileAPI)
+data = telechargementJSON(fileAPI)
 lastDateData = data['Publications']['DatePublication'][0:10]
 data = data['Publications']['PublicationDetail']
 idsGel = []
@@ -36,7 +45,11 @@ for ii in data:
     idsGel.append(ii['IdRegistre'])
 data_load_state.text('La dernière date de mise à jour de la base des gels des avoirs est le '+lastDateData)
 
-## Importing
+## Importing Data
+st.write('Le fichier à uploader doit être un fichier csv (séparateur ;) et comporter au moins trois colonnes : *contractId*, *nom*, *prenom*')
+template = telechargementCSV('https://raw.githubusercontent.com/PierrickPiette/streamlit-lcbft/refs/heads/main/templateArgos.csv')
+template = convert_df(template)
+st.download_button("Télécharger un template",template,"templateArgos.csv")
 uploaded_file = st.file_uploader("Uploader le fichier des assurés à vérifier",type={"csv"})
 
 ## Analyse
@@ -108,10 +121,6 @@ if uploaded_file is not None:
 
     ## Threshold
     thre = 91
-    @st.cache_data
-    def convert_df(df):
-        return df.to_csv(index=False,sep=';').encode('utf-8')
-    
     concern = similarities[similarities.score > thre].reset_index()
     similaritiesCSV = convert_df(similarities)
     if len(concern)==0:
