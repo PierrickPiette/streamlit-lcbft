@@ -31,7 +31,7 @@ def telechargementCSV(url):
 ## Convertion en csv
 @st.cache_data
 def convert_df(df):
-    return df.to_csv(index=False,sep=';').encode('utf-8')
+    return df.to_csv(index=False,sep=';',decimal=',').encode('utf-8')
 
 ## Argos
 st.header('Argos')
