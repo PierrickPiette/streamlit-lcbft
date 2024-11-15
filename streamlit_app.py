@@ -128,10 +128,13 @@ if uploaded_file is not None:
         st.download_button("Télécharger la liste de concordances",
                            similaritiesCSV,"concordanceScore.csv")
     else:
-        st.error('Il y a ' + str(len(concern)) + ' assurés avec une potentielle concordance')
+        if len(concern)==1:
+            st.error('Il y a 1 assuré avec une potentielle concordance')
+        else:
+            st.error('Il y a ' + str(len(concern)) + ' assurés avec une potentielle concordance')
         st.download_button("Télécharger la liste de concordances",
                            similaritiesCSV,"concordanceScore.csv")
-        st.dataframe(concern)
+        st.dataframe(concern,hide_index=True)
         st.write('Liens vers les fiches détaillés du Registre des gels des avoirs')
         urlRegistre='https://gels-avoirs.dgtresor.gouv.fr/Gels/RegistreDetail?idRegistre='
         for cc in range(len(concern)):
