@@ -13,8 +13,7 @@ st.columns(1)
 
 st.header('Disclaimer')
 st.write('Argos permet de vérifier si un de vos assurés est dans la liste du Trésor des gels des avoirs. Cette vérification fait parti du dispositf réglementaire de la LCB-FT.')
-st.write('Argos est développé par Hestialytics et est mis à disposition en open-source. Des bugs peuvent subsister.')
-st.write('Si vous souhaitez avoir une version plus adaptée à vous besoins, contactez nous à contact@hestialytics.com')
+st.write('Argos est développé par Hestialytics, et vous utilisez actuellement la version open-source. Si vous souhaitez avoir une version plus adaptée à vous besoins, contactez nous à contact@hestialytics.com')
 
 ## Loading data Json
 @st.cache_data(ttl=24*60*60)
@@ -108,8 +107,8 @@ if uploaded_file is not None:
         kept = np.argmax(sims)
         new = pd.DataFrame({'assure':[prenomAssure + ' ' +portfolio['nom'][aa]],
                             'contractId':[portfolio['contractId'][aa]],
+                            'bestMatch':[gels['nom'][kept]],
                             'idRegistre':[gels['idRegistre'][kept]],
-                            'nomGel':[gels['nom'][kept]],
                             'score':[sims[kept]]})
         if aa == 0:
             similarities = new
@@ -126,11 +125,11 @@ if uploaded_file is not None:
     if len(concern)==0:
         st.success('Aucun assuré ne semble être dans la liste des avoirs gelés')
         st.balloons()
-        st.download_button("Télécharger le fichier des meilleurs concordances",
+        st.download_button("Télécharger la liste de concordances",
                            similaritiesCSV,"concordanceScore.csv")
     else:
         st.error('Il y a ' + str(len(concern)) + ' assurés avec une potentielle concordance')
-        st.download_button("Télécharger le fichier des meilleurs concordances",
+        st.download_button("Télécharger la liste de concordances",
                            similaritiesCSV,"concordanceScore.csv")
         st.dataframe(concern)
         st.write('Liens vers les fiches détaillés du Registre des gels des avoirs')
@@ -138,3 +137,6 @@ if uploaded_file is not None:
         for cc in range(len(concern)):
             st.link_button(concern['assure'][cc]+' - Contrat '+ str(concern['contractId'][cc]),
                             urlRegistre+str(concern['idRegistre'][cc]))
+
+st.divider()
+st.caption('Hestialytics, SAS. 68 Boulevard de l Hopital 75013 PARIS. Immatriculée au RCS de Paris 932 420 755.')
