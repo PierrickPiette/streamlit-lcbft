@@ -35,7 +35,8 @@ def convert_df(df):
 ## Argos
 st.header('Argos')
 data_load_state = st.text('Téléchargement de la base des gels des avoirs ...')
-fileAPI = 'https://gels-avoirs.dgtresor.gouv.fr/ApiPublic/api/v1/publication/derniere-publication-fichier-json'
+#fileAPI = 'https://gels-avoirs.dgtresor.gouv.fr/ApiPublic/api/v1/publication/derniere-publication-fichier-json'
+fileAPI = 'https://raw.githubusercontent.com/PierrickPiette/streamlit-lcbft/refs/heads/main/Registrenationaldesgels.json'
 data = telechargementJSON(fileAPI)
 lastDateData = data['Publications']['DatePublication'][0:10]
 data = data['Publications']['PublicationDetail']
